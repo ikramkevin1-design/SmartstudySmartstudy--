@@ -1,0 +1,874 @@
+<meta name='viewport' content='width=device-width, initial-scale=1'/><!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#2458e8">
+<title>SmartStudy -- Учись умнее</title>
+
+<style>
+:root {
+  --blue: #2458e8;
+  --purple: #7456e8;
+  --bg: #f4f6fc;
+  --card: #ffffff;
+  --text: #172033;
+  --muted: #69758a;
+  --border: #e3e8f2;
+  --green: #12805c;
+}
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+  color: var(--text);
+  background: var(--bg);
+}
+
+button, input, select, textarea { font: inherit; }
+
+header {
+  color: white;
+  padding: 23px 18px;
+  background: linear-gradient(125deg, #1746c4, #7456e8);
+}
+
+.header-inner, main, footer {
+  max-width: 1000px;
+  margin: auto;
+}
+
+.header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.logo { font-size: 23px; font-weight: 900; }
+.logo span { color: #c9d5ff; }
+
+header p { color: #e5eaff; line-height: 1.5; }
+
+.language {
+  border: 0;
+  border-radius: 9px;
+  padding: 9px;
+  background: white;
+  color: #172033;
+}
+
+main { padding: 17px; }
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.card, .stat {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 15px;
+}
+
+.stat strong {
+  display: block;
+  font-size: 22px;
+  margin: 8px 0 3px;
+}
+
+.stat small { color: var(--muted); }
+
+h2 { font-size: 21px; }
+.section-title { margin-top: 27px; }
+
+.nav {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 12px 0;
+}
+
+.nav button {
+  flex-shrink: 0;
+  border: 1px solid var(--border);
+  background: white;
+  color: var(--text);
+  border-radius: 10px;
+  padding: 11px 13px;
+  cursor: pointer;
+}
+
+.nav button.active {
+  color: white;
+  background: var(--blue);
+  border-color: var(--blue);
+}
+
+.page { display: none; }
+.page.active { display: block; }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.feature {
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  color: var(--text);
+}
+
+.feature .icon { font-size: 28px; }
+.feature h3 { margin: 12px 0 6px; }
+.feature p { color: var(--muted); font-size: 13px; line-height: 1.5; margin: 0; }
+
+.btn {
+  border: 0;
+  border-radius: 10px;
+  padding: 12px 15px;
+  background: var(--blue);
+  color: white;
+  cursor: pointer;
+  margin: 5px 4px 5px 0;
+}
+
+.btn.secondary {
+  background: #e9efff;
+  color: #204cc5;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 12px;
+  margin: 7px 0;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: white;
+  color: var(--text);
+}
+
+textarea { resize: vertical; min-height: 90px; }
+
+label { display: block; margin-top: 10px; }
+
+.muted { color: var(--muted); font-size: 13px; line-height: 1.5; }
+
+.task {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+  padding: 11px 0;
+}
+
+.task input { width: 20px; margin: 0; }
+.task span { flex: 1; overflow-wrap: anywhere; }
+.task.done span { text-decoration: line-through; color: var(--muted); }
+
+.result {
+  margin-top: 12px;
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+}
+
+.formula {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+  line-height: 1.6;
+}
+
+.formula code {
+  display: block;
+  color: #2458e8;
+  font-size: 15px;
+  white-space: normal;
+}
+
+.timer {
+  font-size: 45px;
+  font-weight: 800;
+  text-align: center;
+  margin: 25px 0;
+}
+
+.ai-head {
+  padding: 17px;
+  border-radius: 14px;
+  background: linear-gradient(130deg, #eaf0ff, #f1eaff);
+  margin-bottom: 15px;
+}
+
+.ai-head h3 { margin-top: 0; }
+
+.chat {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 15px 0;
+}
+
+.message {
+  max-width: 95%;
+  padding: 12px 14px;
+  border-radius: 14px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.message.bot {
+  background: #edf1fa;
+  align-self: flex-start;
+}
+
+.message.user {
+  background: #2458e8;
+  color: white;
+  align-self: flex-end;
+}
+
+.quick-questions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin: 12px 0;
+}
+
+.quick-questions button {
+  border: 1px solid var(--border);
+  background: white;
+  color: var(--text);
+  border-radius: 20px;
+  padding: 9px 12px;
+  cursor: pointer;
+}
+
+.progress-track {
+  height: 10px;
+  border-radius: 20px;
+  background: #e5eaf5;
+  overflow: hidden;
+  margin: 12px 0;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #2458e8, #7456e8);
+  transition: width .2s;
+}
+
+footer {
+  text-align: center;
+  padding: 25px 15px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+@media (min-width: 650px) {
+  .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  header h1 { font-size: 34px; }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-top">
+      <div class="logo">📘 Smart<span>Study</span></div>
+      <select id="language" class="language" aria-label="Язык сайта">
+        <option value="ru">🇷🇺 Русский</option>
+        <option value="kk">🇰🇿 Қазақша</option>
+      </select>
+    </div>
+    <h1 id="welcome">Учись умнее, достигай большего! 🚀</h1>
+    <p id="subtitle">Твой учебный помощник для 4–9 классов. Бесплатно и без регистрации.</p>
+  </div>
+</header>
+
+<main>
+  <div class="stats">
+    <div class="stat">⭐<strong id="points">0</strong><small>Баллы</small></div>
+    <div class="stat">📝<strong id="taskCount">0</strong><small>Активные задания</small></div>
+    <div class="stat">🏆<strong id="level">1</strong><small>Уровень</small></div>
+  </div>
+
+  <nav class="nav" aria-label="Разделы сайта">
+    <button class="active" data-page="home">🏠 Главная</button>
+    <button data-page="ai">🤖 ИИ-помощник</button>
+    <button data-page="homework">📝 Задания</button>
+    <button data-page="calculator">🧮 Калькулятор</button>
+    <button data-page="tests">🧠 Тесты</button>
+    <button data-page="formulas">📚 Формулы</button>
+    <button data-page="timer">⏱️ Таймер</button>
+    <button data-page="progress">🏆 Прогресс</button>
+  </nav>
+
+  <section class="page active" id="home">
+    <h2 class="section-title">Твоя учебная площадка</h2>
+    <div class="grid">
+      <button class="card feature" data-open="ai">
+        <div class="icon">🤖</div><h3>Учебный помощник</h3>
+        <p>Задавай вопросы и изучай темы простыми словами.</p>
+      </button>
+      <button class="card feature" data-open="homework">
+        <div class="icon">📝</div><h3>Планировщик</h3>
+        <p>Записывай задания и отмечай выполненные.</p>
+      </button>
+      <button class="card feature" data-open="calculator">
+        <div class="icon">🧮</div><h3>Калькулятор</h3>
+        <p>Считай проценты и средний балл.</p>
+      </button>
+      <button class="card feature" data-open="tests">
+        <div class="icon">🧠</div><h3>Мини-тесты</h3>
+        <p>Проверь себя и заработай баллы.</p>
+      </button>
+      <button class="card feature" data-open="formulas">
+        <div class="icon">📚</div><h3>Формулы</h3>
+        <p>Повторяй правила математики и физики.</p>
+      </button>
+      <button class="card feature" data-open="timer">
+        <div class="icon">⏱️</div><h3>Фокус</h3>
+        <p>Учись небольшими отрезками времени.</p>
+      </button>
+    </div>
+    <div class="card" style="margin-top:15px">
+      <h3>💡 Совет дня</h3>
+      <p id="dailyTip">Разделяй большую задачу на несколько маленьких. Так легче начать и закончить работу.</p>
+      <button class="btn secondary" id="newTip">Другой совет</button>
+    </div>
+  </section>
+
+  <section class="page" id="ai">
+    <div class="ai-head">
+      <h2>🤖 SmartStudy AI</h2>
+      <p>Учебный помощник для 4–9 классов</p>
+      <p class="muted">Задай вопрос по математике или попроси объяснить учебную тему. Сейчас доступны встроенные ответы и учебные примеры.</p>
+    </div>
+
+    <label for="aiGrade">Твой класс</label>
+    <select id="aiGrade">
+      <option value="4">4 класс</option><option value="5">5 класс</option>
+      <option value="6">6 класс</option><option value="7">7 класс</option>
+      <option value="8">8 класс</option><option value="9">9 класс</option>
+    </select>
+
+    <div class="quick-questions">
+      <button data-prompt="Объясни дроби">Дроби</button>
+      <button data-prompt="Объясни проценты">Проценты</button>
+      <button data-prompt="Объясни уравнения">Уравнения</button>
+      <button data-prompt="Объясни теорему Пифагора">Пифагор</button>
+      <button data-prompt="Дай совет по учёбе">Совет по учёбе</button>
+    </div>
+
+    <div class="card">
+      <div class="chat" id="chat" aria-live="polite">
+        <div class="message bot">Привет! 👋 Я учебный помощник SmartStudy. Выбери тему выше или напиши вопрос ниже. Я объясню её на доступных примерах.</div>
+      </div>
+
+      <form id="aiForm">
+        <label for="aiInput">Твой вопрос</label>
+        <textarea id="aiInput" maxlength="1000" placeholder="Например: объясни, как решать уравнения..." required></textarea>
+        <button class="btn" type="submit">Отправить ➤</button>
+        <button class="btn secondary" type="button" id="clearChat">Очистить чат</button>
+      </form>
+    </div>
+  </section>
+
+  <section class="page" id="homework">
+    <h2>📝 Домашние задания</h2>
+    <div class="card">
+      <form id="taskForm">
+        <label for="taskInput">Новое задание</label>
+        <input id="taskInput" maxlength="150" placeholder="Например: решить задачи по алгебре" required>
+        <button class="btn" type="submit">+ Добавить задание</button>
+      </form>
+      <div id="taskList"></div>
+      <p class="muted">Данные сохраняются только в браузере этого устройства.</p>
+    </div>
+  </section>
+
+  <section class="page" id="calculator">
+    <h2>🧮 Калькулятор</h2>
+    <div class="card">
+      <h3>Проценты</h3>
+      <label for="percentNumber">Число</label>
+      <input id="percentNumber" type="number" placeholder="Например, 200">
+      <label for="percentValue">Процент</label>
+      <input id="percentValue" type="number" placeholder="Например, 15">
+      <button class="btn" id="calcPercent">Рассчитать</button>
+      <div class="result" id="percentResult" aria-live="polite"></div>
+      <hr style="border:0;border-top:1px solid var(--border);margin:20px 0">
+      <h3>Средний балл</h3>
+      <label for="grades">Введи оценки через запятую</label>
+      <input id="grades" placeholder="Например: 5, 4, 5, 3">
+      <button class="btn" id="calcAverage">Рассчитать средний балл</button>
+      <div class="result" id="averageResult" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <section class="page" id="tests">
+    <h2>🧠 Мини-тест по математике</h2>
+    <div class="card">
+      <p>Ответь на вопросы и проверь свои знания.</p>
+      <div id="quiz"></div>
+      <button class="btn" id="checkQuiz">Проверить ответы</button>
+      <div class="result" id="quizResult" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <section class="page" id="formulas">
+    <h2>📚 Справочник формул</h2>
+    <div class="card">
+      <label for="formulaGrade">Выбери класс</label>
+      <select id="formulaGrade">
+        <option value="4">4 класс</option><option value="5">5 класс</option>
+        <option value="6">6 класс</option><option value="7">7 класс</option>
+        <option value="8">8 класс</option><option value="9">9 класс</option>
+      </select>
+      <div id="formulaList"></div>
+    </div>
+  </section>
+
+  <section class="page" id="timer">
+    <h2>⏱️ Учебный таймер</h2>
+    <div class="card">
+      <p>Сосредоточься на одном задании, затем сделай перерыв.</p>
+      <div class="timer" id="timerDisplay">25:00</div>
+      <button class="btn" id="startTimer">Старт</button>
+      <button class="btn secondary" id="pauseTimer">Пауза</button>
+      <button class="btn secondary" id="resetTimer">Сброс</button>
+      <div class="result" id="timerMessage" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <section class="page" id="progress">
+    <h2>🏆 Твой прогресс</h2>
+    <div class="card">
+      <h3>Уровень <span id="progressLevel">1</span></h3>
+      <p>Баллы: <strong id="progressPoints">0</strong></p>
+      <div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
+      <p class="muted" id="progressHint">Заработай 50 баллов, чтобы перейти на следующий уровень.</p>
+      <button class="btn secondary" id="resetProgress">Сбросить прогресс</button>
+    </div>
+  </section>
+</main>
+
+<footer>
+  SmartStudy © 2026<br>
+  Учись в своём темпе -- шаг за шагом.
+</footer>
+
+<script>
+(() => {
+  "use strict";
+
+  const $ = id => document.getElementById(id);
+
+  let state = { tasks: [], points: 0, quizDone: false };
+  try {
+    const saved = JSON.parse(localStorage.getItem("smartstudy-v2"));
+    if (saved && Array.isArray(saved.tasks)) state = {...state, ...saved};
+  } catch (_) {}
+
+  function save() {
+    try { localStorage.setItem("smartstudy-v2", JSON.stringify(state)); }
+    catch (_) {}
+    updateStats();
+  }
+
+  function updateStats() {
+    const level = Math.floor(state.points / 50) + 1;
+    $("points").textContent = state.points;
+    $("taskCount").textContent = state.tasks.filter(t => !t.done).length;
+    $("level").textContent = level;
+    $("progressPoints").textContent = state.points;
+    $("progressLevel").textContent = level;
+    $("progressBar").style.width = (state.points % 50 / 50 * 100) + "%";
+  }
+
+  function showPage(id) {
+    document.querySelectorAll(".page").forEach(p => p.classList.toggle("active", p.id === id));
+    document.querySelectorAll(".nav button").forEach(b => b.classList.toggle("active", b.dataset.page === id));
+    window.scrollTo({top: 0, behavior: "smooth"});
+  }
+
+  document.querySelectorAll("[data-page]").forEach(b =>
+    b.addEventListener("click", () => showPage(b.dataset.page))
+  );
+  document.querySelectorAll("[data-open]").forEach(b =>
+    b.addEventListener("click", () => showPage(b.dataset.open))
+  );
+
+  // Домашние задания
+  function renderTasks() {
+    const list = $("taskList");
+    list.replaceChildren();
+
+    state.tasks.forEach((task, index) => {
+      const row = document.createElement("div");
+      row.className = "task" + (task.done ? " done" : "");
+
+      const check = document.createElement("input");
+      check.type = "checkbox";
+      check.checked = task.done;
+      check.setAttribute("aria-label", "Отметить выполнение");
+      check.addEventListener("change", () => {
+        if (check.checked && !task.done) state.points += 5;
+        if (!check.checked && task.done) state.points = Math.max(0, state.points - 5);
+        task.done = check.checked;
+        save();
+        renderTasks();
+      });
+
+      const text = document.createElement("span");
+      text.textContent = task.text;
+
+      const remove = document.createElement("button");
+      remove.className = "btn secondary";
+      remove.type = "button";
+      remove.textContent = "Удалить";
+      remove.addEventListener("click", () => {
+        if (task.done) state.points = Math.max(0, state.points - 5);
+        state.tasks.splice(index, 1);
+        save();
+        renderTasks();
+      });
+
+      row.append(check, text, remove);
+      list.append(row);
+    });
+    updateStats();
+  }
+
+  $("taskForm").addEventListener("submit", event => {
+    event.preventDefault();
+    const value = $("taskInput").value.trim();
+    if (!value) return;
+    state.tasks.push({text: value, done: false});
+    $("taskInput").value = "";
+    save();
+    renderTasks();
+  });
+
+  // Калькуляторы
+  $("calcPercent").addEventListener("click", () => {
+    const a = $("percentNumber").value.trim();
+    const b = $("percentValue").value.trim();
+    if (a === "" || b === "") {
+      $("percentResult").textContent = "Введи число и процент.";
+      return;
+    }
+    const n = Number(a), p = Number(b);
+    if (!Number.isFinite(n) || !Number.isFinite(p)) {
+      $("percentResult").textContent = "Проверь введённые числа.";
+      return;
+    }
+    $("percentResult").textContent = `${p}% от ${n} = ${Number((n * p / 100).toFixed(6))}`;
+  });
+
+  $("calcAverage").addEventListener("click", () => {
+    const raw = $("grades").value.trim();
+    const result = $("averageResult");
+    if (!raw) {
+      result.textContent = "Введи оценки, например: 5, 4, 3, 5.";
+      return;
+    }
+    const grades = raw.split(/[,\s;]+/).map(Number);
+    if (grades.some(n => !Number.isFinite(n) || n < 1 || n > 5)) {
+      result.textContent = "Введи оценки от 1 до 5 через запятую.";
+      return;
+    }
+    result.textContent = "Твой средний балл: " +
+      (grades.reduce((a, b) => a + b, 0) / grades.length).toFixed(2);
+  });
+
+  // Тест
+  const questions = [
+    {q:"Сколько будет 12 × 8?", options:["86","96","108"], answer:1},
+    {q:"Сумма углов треугольника равна…", options:["90°","180°","360°"], answer:1},
+    {q:"Сколько будет 15% от 200?", options:["15","20","30"], answer:2},
+    {q:"Как найти скорость?", options:["v = s / t","v = m / V","F = m × a"], answer:0},
+    {q:"Чему равен квадрат числа 7?", options:["14","49","77"], answer:1}
+  ];
+
+  function renderQuiz() {
+    const root = $("quiz");
+    root.replaceChildren();
+    questions.forEach((q, i) => {
+      const box = document.createElement("div");
+      box.className = "formula";
+      const title = document.createElement("strong");
+      title.textContent = `${i + 1}. ${q.q}`;
+      box.append(title);
+
+      q.options.forEach((option, j) => {
+        const label = document.createElement("label");
+        const radio = document.createElement("input");
+        radio.type = "radio";
+        radio.name = "quiz-" + i;
+        radio.value = j;
+        radio.style.width = "auto";
+        label.append(radio, document.createTextNode(" " + option));
+        box.append(label);
+      });
+      root.append(box);
+    });
+  }
+
+  $("checkQuiz").addEventListener("click", () => {
+    if (state.quizDone) {
+      $("quizResult").textContent = "Ты уже получил баллы за этот тест.";
+      return;
+    }
+    let score = 0, answered = 0;
+    questions.forEach((q, i) => {
+      const selected = document.querySelector(`input[name="quiz-${i}"]:checked`);
+      if (selected) {
+        answered++;
+        if (Number(selected.value) === q.answer) score++;
+      }
+    });
+    if (answered < questions.length) {
+      $("quizResult").textContent = "Ответь на все вопросы.";
+      return;
+    }
+    $("quizResult").textContent = `Правильных ответов: ${score} из ${questions.length}.`;
+    state.points += score * 3;
+    state.quizDone = true;
+    save();
+  });
+
+  // Формулы по классам
+  const formulas = {
+    4: [["Периметр прямоугольника","P = 2 × (a + b)"],["Площадь прямоугольника","S = a × b"],["Площадь квадрата","S = a × a"]],
+    5: [["Процент","1% = 1/100 числа"],["Среднее арифметическое","Сумма чисел ÷ количество чисел"],["Периметр","Сумма длин всех сторон"]],
+    6: [["Пропорция","a/b = c/d → a × d = b × c"],["Процент от числа","Число × процент ÷ 100"],["Скорость","v = s/t"]],
+    7: [["Раскрытие скобок","a(b + c) = ab + ac"],["Квадрат суммы","(a+b)² = a²+2ab+b²"],["Линейное уравнение","ax + b = c → x = (c-b)/a, если a ≠ 0"]],
+    8: [["Теорема Пифагора","c² = a² + b²"],["Разность квадратов","a² − b² = (a−b)(a+b)"],["Дискриминант","D = b² − 4ac"]],
+    9: [["Квадратное уравнение","ax² + bx + c = 0"],["Корни квадратного уравнения","x = (−b ± √D)/(2a), если D ≥ 0 и a ≠ 0"],["Скорость","v = s/t"],["Закон Ома","I = U/R"]]
+  };
+
+  function renderFormulas() {
+    const root = $("formulaList");
+    root.replaceChildren();
+    formulas[$("formulaGrade").value].forEach(([name, formula]) => {
+      const div = document.createElement("div");
+      div.className = "formula";
+      const title = document.createElement("strong");
+      title.textContent = name;
+      const code = document.createElement("code");
+      code.textContent = formula;
+      div.append(title, code);
+      root.append(div);
+    });
+  }
+  $("formulaGrade").addEventListener("change", renderFormulas);
+
+  // Таймер
+  let remaining = 25 * 60;
+  let interval = null;
+
+  function updateTimer() {
+    $("timerDisplay").textContent =
+      String(Math.floor(remaining / 60)).padStart(2, "0") + ":" +
+      String(remaining % 60).padStart(2, "0");
+  }
+
+  $("startTimer").addEventListener("click", () => {
+    if (interval !== null) return;
+    $("timerMessage").textContent = "";
+    interval = setInterval(() => {
+      remaining--;
+      updateTimer();
+      if (remaining <= 0) {
+        clearInterval(interval);
+        interval = null;
+        state.points += 5;
+        save();
+        $("timerMessage").textContent = "Отлично! Ты заработал 5 баллов. Сделай небольшой перерыв.";
+      }
+    }, 1000);
+  });
+
+  $("pauseTimer").addEventListener("click", () => {
+    clearInterval(interval);
+    interval = null;
+  });
+
+  $("resetTimer").addEventListener("click", () => {
+    clearInterval(interval);
+    interval = null;
+    remaining = 25 * 60;
+    updateTimer();
+    $("timerMessage").textContent = "";
+  });
+
+  // Учебный помощник: встроенные объяснения
+  const answers = [
+    {
+      keys:["дроб","числител","знаменател"],
+      text:"📘 Дроби\n\nДробь показывает часть целого.\n\nНапример, 3/4 означает, что целое разделили на 4 равные части и взяли 3.\n\nПри одинаковых знаменателях складываем числители:\n1/5 + 2/5 = 3/5.\n\nПри разных знаменателях сначала приводим дроби к общему знаменателю."
+    },
+    {
+      keys:["процент","%"],
+      text:"📊 Проценты\n\nПроцент -- это одна сотая часть числа.\n\nЧтобы найти процент от числа, умножь число на процент и раздели на 100.\n\nПример: 20% от 150.\n150 × 20 ÷ 100 = 30.\n\nОтвет: 30."
+    },
+    {
+      keys:["уравнен","неизвестн","найти x","найди x"],
+      text:"✏️ Уравнения\n\nЦель -- оставить неизвестное x отдельно.\n\nПример: 3x + 6 = 18.\n\n1. Вычитаем 6 с обеих сторон: 3x = 12.\n2. Делим обе стороны на 3: x = 4.\n3. Проверяем: 3 × 4 + 6 = 18.\n\nОтвет: x = 4."
+    },
+    {
+      keys:["пифагор","гипотенуз"],
+      text:"📐 Теорема Пифагора\n\nВ прямоугольном треугольнике квадрат гипотенузы равен сумме квадратов катетов.\n\nФормула: c² = a² + b².\n\nПример: катеты 3 и 4.\nc² = 3² + 4² = 9 + 16 = 25.\nc = 5.\n\nГипотенуза равна 5."
+    },
+    {
+      keys:["скорост","расстояни","время"],
+      text:"🚲 Скорость, расстояние и время\n\nСкорость: v = s ÷ t.\nРасстояние: s = v × t.\nВремя: t = s ÷ v.\n\nПример: велосипедист проехал 30 км за 2 часа.\nv = 30 ÷ 2 = 15 км/ч."
+    },
+    {
+      keys:["совет","учиться","учёб","учеб","готовиться","экзамен"],
+      text:"💡 Умный план учёбы\n\n1. Выбери одну конкретную задачу.\n2. Учись 20–25 минут без отвлечений.\n3. Отдохни 5 минут.\n4. Объясни тему своими словами.\n5. Реши один пример самостоятельно.\n\nНе обязательно понимать всё сразу. Важно постепенно разбираться в каждом шаге."
+    },
+    {
+      keys:["формул","физик","сила","плотност","ом","ток"],
+      text:"⚡ Полезные формулы физики\n\nСкорость: v = s/t.\nПлотность: ρ = m/V.\nСила: F = m × a.\nЗакон Ома: I = U/R.\n\nОбозначения:\ns -- расстояние, t -- время, m -- масса, V -- объём, a -- ускорение, U -- напряжение, R -- сопротивление.\n\nНапиши название конкретной темы, чтобы выбрать подходящий пример."
+    },
+    {
+      keys:["площад","периметр"],
+      text:"📏 Площадь и периметр\n\nПериметр -- сумма длин всех сторон.\n\nПрямоугольник:\nP = 2 × (a + b).\n\nПлощадь прямоугольника:\nS = a × b.\n\nПример: стороны 5 см и 3 см.\nP = 2 × (5 + 3) = 16 см.\nS = 5 × 3 = 15 см²."
+    },
+    {
+      keys:["степен","квадрат"],
+      text:"🔢 Степени\n\nСтепень показывает, сколько раз число умножается само на себя.\n\nПример: 2³ = 2 × 2 × 2 = 8.\n\nПри умножении степеней с одинаковым основанием показатели складываются:\naᵐ × aⁿ = aᵐ⁺ⁿ.\n\nПример: 2² × 2³ = 2⁵ = 32."
+    }
+  ];
+
+  function answerQuestion(question, grade) {
+    const q = question.toLowerCase().replaceAll("ё", "е");
+
+    // Простые арифметические примеры, например: 25 * 4
+    const math = q.match(/(-?\d+(?:[.,]\d+)?)\s*([+*/×÷−-])\s*(-?\d+(?:[.,]\d+)?)/);
+    if (math) {
+      const a = Number(math[1].replace(",", "."));
+      const b = Number(math[3].replace(",", "."));
+      const op = math[2];
+      let result;
+      if (op === "+") result = a + b;
+      else if (op === "-" || op === "−") result = a - b;
+      else if (op === "*" || op === "×") result = a * b;
+      else if (op === "/" || op === "÷") {
+        if (b === 0) return "На ноль делить нельзя. Проверь пример.";
+        result = a / b;
+      }
+
+      if (Number.isFinite(result)) {
+        return `🧮 Разберём пример для ${grade} класса.\n\n${a} ${op} ${b} = ${Number(result.toFixed(8))}.\n\nПопробуй решить похожий пример самостоятельно, чтобы закрепить правило.`;
+      }
+    }
+
+    for (const item of answers) {
+      if (item.keys.some(key => q.includes(key))) {
+        return `📚 Объяснение для ${grade} класса\n\n${item.text}\n\nПопробуй применить правило к своему примеру.`;
+      }
+    }
+
+    if (q.includes("привет") || q.includes("здравств")) {
+      return "Привет! 👋 Я учебный помощник SmartStudy. Спроси меня про дроби, проценты, уравнения, степени, площадь, периметр или формулы физики.";
+    }
+
+    return `Я пока работаю в демонстрационном режиме и не умею понимать любые вопросы как полноценная нейросеть.\n\nМогу помочь с такими темами:\n• Дроби и проценты\n• Простые арифметические примеры\n• Уравнения\n• Степени\n• Теорема Пифагора\n• Площадь и периметр\n• Основные формулы физики\n\nНапиши, например: «Объясни проценты» или «25 × 4».`;
+  }
+
+  function addMessage(text, type) {
+    const div = document.createElement("div");
+    div.className = "message " + type;
+    div.textContent = text;
+    $("chat").append(div);
+    div.scrollIntoView({behavior: "smooth", block: "nearest"});
+  }
+
+  function askAI(text) {
+    const question = text.trim();
+    if (!question) return;
+    addMessage(question, "user");
+    $("aiInput").value = "";
+    const grade = $("aiGrade").value;
+    const reply = answerQuestion(question, grade);
+    addMessage(reply, "bot");
+  }
+
+  $("aiForm").addEventListener("submit", event => {
+    event.preventDefault();
+    askAI($("aiInput").value);
+  });
+
+  document.querySelectorAll("[data-prompt]").forEach(button => {
+    button.addEventListener("click", () => askAI(button.dataset.prompt));
+  });
+
+  $("clearChat").addEventListener("click", () => {
+    $("chat").replaceChildren();
+    addMessage("Чат очищен! 👋 Напиши новый вопрос.", "bot");
+  });
+
+  // Советы дня
+  const tips = [
+    "Разделяй большую задачу на несколько маленьких. Так легче начать.",
+    "После изучения темы попробуй объяснить её своими словами.",
+    "Сначала реши пример самостоятельно, затем проверь ответ.",
+    "Короткие регулярные занятия часто удобнее, чем долгая учёба без перерывов.",
+    "Если ошибся, найди шаг, на котором появилась ошибка, и попробуй ещё раз."
+  ];
+  $("newTip").addEventListener("click", () => {
+    const current = $("dailyTip").textContent;
+    let next = current;
+    while (next === current && tips.length > 1) next = tips[Math.floor(Math.random() * tips.length)];
+    $("dailyTip").textContent = next;
+  });
+
+  $("resetProgress").addEventListener("click", () => {
+    if (!confirm("Сбросить задания, баллы и результат теста на этом устройстве?")) return;
+    state = {tasks: [], points: 0, quizDone: false};
+    save();
+    renderTasks();
+    $("quizResult").textContent = "";
+  });
+
+  // Переключение языка интерфейса
+  const languageStrings = {
+    ru: {
+      welcome:"Учись умнее, достигай большего! 🚀",
+      subtitle:"Твой учебный помощник для 4–9 классов. Бесплатно и без регистрации."
+    },
+    kk: {
+      welcome:"Ақылды оқы, биікке ұмтыл! 🚀",
+      subtitle:"4–9 сыныптарға арналған тегін оқу көмекшісі. Тіркелу қажет емес."
+    }
+  };
+
+  $("language").addEventListener("change", () => {
+    const lang = $("language").value;
+    $("welcome").textContent = languageStrings[lang].welcome;
+    $("subtitle").textContent = languageStrings[lang].subtitle;
+    document.documentElement.lang = lang;
+  });
+
+  renderTasks();
+  renderQuiz();
+  renderFormulas();
+  updateTimer();
+  updateStats();
+})();
+</script>
+
+</body>
+</html>
